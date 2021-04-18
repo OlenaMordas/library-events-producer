@@ -1,6 +1,5 @@
 package com.learnkafka.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learnkafka.domain.Book;
 import com.learnkafka.domain.LibraryEvent;
@@ -16,7 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LibraryEventsController.class)
