@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,7 +47,7 @@ public class LibraryEventControllerUnitTest {
         String json = objectMapper.writeValueAsString(libraryEvent);
 
         //mock a method of libraryEventProducer
-        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach2(isA(LibraryEvent.class));
+        when(libraryEventProducer.sendLibraryEvent_Approach2(isA(LibraryEvent.class))).thenReturn(null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/v1/libraryevent")
@@ -72,8 +72,7 @@ public class LibraryEventControllerUnitTest {
         String json = objectMapper.writeValueAsString(libraryEvent);
 
         //mock a method of libraryEventProducer
-        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach2(isA(LibraryEvent.class));
-
+        when(libraryEventProducer.sendLibraryEvent_Approach2(isA(LibraryEvent.class))).thenReturn(null);
         String expectedErrorMessage = "book.bookAuthor-must not be null,book.bookId-must not be null";
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/v1/libraryevent")
