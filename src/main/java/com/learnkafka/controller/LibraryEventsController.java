@@ -27,8 +27,9 @@ public class LibraryEventsController {
 
         log.info("before send library event");
         //libraryEventProducer.sendLibraryEvent(libraryEvent);
-        SendResult<Integer, String> sendResult = libraryEventProducer.sendLibraryEvenSync(libraryEvent);
-        log.info("Send restult: {}", sendResult.toString());
+        //SendResult<Integer, String> sendResult = libraryEventProducer.sendLibraryEvenSync(libraryEvent);
+        libraryEventProducer.sendLibraryEvent_Approach2(libraryEvent);
+        //log.info("Send restult: {}", sendResult.toString());
         log.info("after send library event");
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
