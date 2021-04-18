@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(LibraryEventsController.class)
@@ -53,6 +54,33 @@ public class LibraryEventControllerUnitTest {
                 .content(json)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    void postLibraryEvent_4xx() throws Exception {
+        Book book = Book.builder()
+                .bookId(null)
+                .bookAuthor(null)
+                .bookName("War and Peace")
+                .build();
+        LibraryEvent libraryEvent = LibraryEvent.builder()
+                .libraryEventId(null)
+                .book(book)
+                .build();
+
+        String json = objectMapper.writeValueAsString(libraryEvent);
+
+        //mock a method of libraryEventProducer
+        doNothing().when(libraryEventProducer).sendLibraryEvent_Approach2(isA(LibraryEvent.class));
+
+        String expectedErrorMessage = "book.bookAuthor-must not be null,book.bookId-must not be null";
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/v1/libraryevent")
+                        .content(json)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(expectedErrorMessage));
 
     }
 }
