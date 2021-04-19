@@ -77,5 +77,32 @@ public class LibraryEventsControllerIntegrationTest {
         String expectedRecord = "{\"libraryEventType\":\"NEW\",\"libraryEventId\":null,\"book\":{\"bookId\":123,\"bookName\":\"War and Peace\",\"bookAuthor\":\"L.Tolstoy\"}}";
         assertEquals(expectedRecord,value);
     }
+
+    @Test
+    @Timeout(5)
+    void putLibraryEvent() throws InterruptedException {
+
+        Book book = Book.builder()
+                .bookId(123)
+                .bookAuthor("L.Tolstoy")
+                .bookName("War and Peace")
+                .build();
+        LibraryEvent libraryEvent = LibraryEvent.builder()
+                .libraryEventId(123)
+                .book(book)
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", MediaType.APPLICATION_JSON.toString());
+        HttpEntity<LibraryEvent> request = new HttpEntity<>(libraryEvent, headers);
+        ResponseEntity<LibraryEvent> responseEntity =
+                testRestTemplate.exchange("/v1/libraryevent", HttpMethod.PUT, request, LibraryEvent.class);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ConsumerRecord<Integer, String> consumerRecord = KafkaTestUtils.getSingleRecord(consumer,"library-events");
+        String value = consumerRecord.value();
+        String expectedRecord = "{\"libraryEventType\":\"UPDATE\",\"libraryEventId\":123,\"book\":{\"bookId\":123,\"bookName\":\"War and Peace\",\"bookAuthor\":\"L.Tolstoy\"}}";
+        assertEquals(expectedRecord,value);
+    }
 }
 
